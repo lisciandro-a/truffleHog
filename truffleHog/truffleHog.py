@@ -138,7 +138,7 @@ def shannon_entropy(data, iterator):
     return entropy
 
 
-def get_strings_of_set(word, char_set, threshold=20):
+def get_strings_of_set(word, char_set, threshold=5):
     count = 0
     letters = ""
     strings = []
