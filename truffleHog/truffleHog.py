@@ -218,12 +218,12 @@ def find_entropy(printableDiff, commit_time, branch_name, prev_commit, blob, com
             hex_strings = get_strings_of_set(word, HEX_CHARS)
             for string in base64_strings:
                 b64Entropy = shannon_entropy(string, BASE64_CHARS)
-                if b64Entropy > 1.2:
+                if b64Entropy > 0.5:
                     stringsFound.append(string)
                     printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
             for string in hex_strings:
                 hexEntropy = shannon_entropy(string, HEX_CHARS)
-                if hexEntropy > 3.0:
+                if hexEntropy > 0.5:
                     stringsFound.append(string)
                     printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
     entropicDiff = None
