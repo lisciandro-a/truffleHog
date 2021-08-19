@@ -92,7 +92,7 @@ def main():
             if pattern and not pattern.startswith('#'):
                 path_exclusions.append(re.compile(pattern))
 
-    output = find_strings(args.git_url, args.since_commit, args.max_depth, args.output_json, args.threshold, args.b64entropy, args.hexentropy, args.do_regex, do_entropy,
+    output = find_strings(args.git_url, args.since_commit, args.max_depth, args.output_json, args.do_regex, do_entropy,
             surpress_output=False, custom_regexes=regexes, branch=args.branch, repo_path=args.repo_path, path_inclusions=path_inclusions, path_exclusions=path_exclusions, allow=allow)
     project_path = output["project_path"]
     if args.cleanup:
@@ -141,7 +141,7 @@ def shannon_entropy(data, iterator):
     return entropy
 
 
-def get_strings_of_set(word, char_set, threshold):
+def get_strings_of_set(word, char_set, threshold=5):
     count = 0
     letters = ""
     strings = []
@@ -214,16 +214,16 @@ def find_entropy(printableDiff, commit_time, branch_name, prev_commit, blob, com
     lines = printableDiff.split("\n")
     for line in lines:
         for word in line.split():
-            base64_strings = get_strings_of_set(word, BASE64_CHARS, threshold)
-            hex_strings = get_strings_of_set(word, HEX_CHARS, threshold)
+            base64_strings = get_strings_of_set(word, BASE64_CHARS)
+            hex_strings = get_strings_of_set(word, HEX_CHARS)
             for string in base64_strings:
                 b64Entropy = shannon_entropy(string, BASE64_CHARS)
-                if b64Entropy > b64_min:
+                if b64Entropy > 1.2:
                     stringsFound.append(string)
                     printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
             for string in hex_strings:
                 hexEntropy = shannon_entropy(string, HEX_CHARS)
-                if hexEntropy > hex_min:
+                if hexEntropy > 3.0:
                     stringsFound.append(string)
                     printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
     entropicDiff = None
